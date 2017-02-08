@@ -61,7 +61,7 @@ class ConvexHullNode(SceneNode):
     def render(self, renderer):
         if not self._shader:
             self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "transparent_object.shader"))
-            self._shader.setUniformValue("u_diffuseColor", self._color)
+            self._shader.setUniformValue("u_diffuse_color", self._color)
             self._shader.setUniformValue("u_opacity", 0.6)
 
         if self.getParent():

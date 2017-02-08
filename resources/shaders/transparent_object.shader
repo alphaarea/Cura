@@ -21,8 +21,8 @@ vertex =
     }
 
 fragment =
-    uniform mediump vec4 u_ambientColor;
-    uniform mediump vec4 u_diffuseColor;
+    uniform mediump vec4 u_ambient_color;
+    uniform mediump vec4 u_diffuse_color;
     uniform highp vec3 u_lightPosition;
 
     uniform mediump float u_opacity;
@@ -35,14 +35,14 @@ fragment =
         mediump vec4 finalColor = vec4(0.0);
 
         /* Ambient Component */
-        finalColor += u_ambientColor;
+        finalColor += u_ambient_color;
 
         highp vec3 normal = normalize(v_normal);
         highp vec3 lightDir = normalize(u_lightPosition - v_vertex);
 
         /* Diffuse Component */
         highp float NdotL = clamp(abs(dot(normal, lightDir)), 0.0, 1.0);
-        finalColor += (NdotL * u_diffuseColor);
+        finalColor += (NdotL * u_diffuse_color);
 
         gl_FragColor = finalColor;
         gl_FragColor.a = u_opacity;
@@ -72,8 +72,8 @@ vertex41core =
 
 fragment41core =
     #version 410
-    uniform mediump vec4 u_ambientColor;
-    uniform mediump vec4 u_diffuseColor;
+    uniform mediump vec4 u_ambient_color;
+    uniform mediump vec4 u_diffuse_color;
     uniform highp vec3 u_lightPosition;
 
     uniform mediump float u_opacity;
@@ -88,22 +88,22 @@ fragment41core =
         mediump vec4 finalColor = vec4(0.0);
 
         /* Ambient Component */
-        finalColor += u_ambientColor;
+        finalColor += u_ambient_color;
 
         highp vec3 normal = normalize(v_normal);
         highp vec3 lightDir = normalize(u_lightPosition - v_vertex);
 
         /* Diffuse Component */
         highp float NdotL = clamp(abs(dot(normal, lightDir)), 0.0, 1.0);
-        finalColor += (NdotL * u_diffuseColor);
+        finalColor += (NdotL * u_diffuse_color);
 
         frag_color = finalColor;
         frag_color.a = u_opacity;
     }
 
 [defaults]
-u_ambientColor = [0.1, 0.1, 0.1, 1.0]
-u_diffuseColor = [0.4, 0.4, 0.4, 1.0]
+u_ambient_color = [0.1, 0.1, 0.1, 1.0]
+u_diffuse_color = [0.4, 0.4, 0.4, 1.0]
 u_opacity = 0.5
 
 [bindings]

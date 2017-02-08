@@ -23,10 +23,10 @@ vertex =
     }
 
 fragment =
-    uniform mediump vec4 u_ambientColor;
-    uniform mediump vec4 u_diffuseColor1;
-    uniform mediump vec4 u_diffuseColor2;
-    uniform mediump vec4 u_specularColor;
+    uniform mediump vec4 u_ambient_color;
+    uniform mediump vec4 u_diffuse_color1;
+    uniform mediump vec4 u_diffuse_color2;
+    uniform mediump vec4 u_specular_color;
     uniform highp vec3 u_lightPosition;
     uniform mediump float u_shininess;
     uniform highp vec3 u_viewPosition;
@@ -43,21 +43,21 @@ fragment =
         mediump vec4 diffuseColor = (mod((-v_position.x + v_position.y), u_width) < (u_width / 2.)) ? u_diffuseColor1 : u_diffuseColor2;
 
         /* Ambient Component */
-        finalColor += u_ambientColor;
+        finalColor += u_ambient_color;
 
         highp vec3 normal = normalize(v_normal);
         highp vec3 lightDir = normalize(u_lightPosition - v_vertex);
 
         /* Diffuse Component */
         highp float NdotL = clamp(abs(dot(normal, lightDir)), 0.0, 1.0);
-        finalColor += (NdotL * diffuseColor);
+        finalColor += (NdotL * u_diffuse_color);
 
         /* Specular Component */
         /* TODO: We should not do specularity for fragments facing away from the light.*/
         highp vec3 reflectedLight = reflect(-lightDir, normal);
         highp vec3 viewVector = normalize(u_viewPosition - v_vertex);
         highp float NdotR = clamp(dot(viewVector, reflectedLight), 0.0, 1.0);
-        finalColor += pow(NdotR, u_shininess) * u_specularColor;
+        finalColor += pow(NdotR, u_shininess) * u_specular_color;
 
         gl_FragColor = finalColor;
         gl_FragColor.a = 1.0;
@@ -132,10 +132,10 @@ fragment41core =
     }
 
 [defaults]
-u_ambientColor = [0.3, 0.3, 0.3, 1.0]
-u_diffuseColor1 = [1.0, 0.5, 0.5, 1.0]
-u_diffuseColor2 = [0.5, 0.5, 0.5, 1.0]
-u_specularColor = [0.4, 0.4, 0.4, 1.0]
+u_ambient_color = [0.3, 0.3, 0.3, 1.0]
+u_diffuse_color1 = [1.0, 0.5, 0.5, 1.0]
+u_diffuse_color2 = [0.5, 0.5, 0.5, 1.0]
+u_specular_color = [0.4, 0.4, 0.4, 1.0]
 u_shininess = 20.0
 u_width = 5.0
 

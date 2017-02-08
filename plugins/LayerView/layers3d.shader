@@ -201,7 +201,6 @@ fragment41core =
 
     out vec4 frag_color;
 
-    uniform mediump vec4 u_ambientColor;
     uniform highp vec3 u_lightPosition;
 
     void main()
@@ -228,9 +227,9 @@ u_active_extruder = 0.0
 u_layer_view_type = 0
 u_extruder_opacity = [1.0, 1.0, 1.0, 1.0]
 
-u_specularColor = [0.4, 0.4, 0.4, 1.0]
-u_ambientColor = [0.3, 0.3, 0.3, 0.0]
-u_diffuseColor = [1.0, 0.79, 0.14, 1.0]
+u_specular_color = [0.4, 0.4, 0.4, 1.0]
+u_ambient_color = [0.3, 0.3, 0.3, 0.0]
+u_diffuse_color = [1.0, 0.79, 0.14, 1.0]
 u_shininess = 20.0
 
 u_show_travel_moves = 0
