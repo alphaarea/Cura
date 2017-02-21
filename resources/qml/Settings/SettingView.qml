@@ -190,20 +190,11 @@ Item
                 Behavior on height { NumberAnimation { duration: 100 } }
                 opacity: provider.properties.enabled == "True" ? 1 : 0
                 Behavior on opacity { NumberAnimation { duration: 100 } }
-                enabled:
-                {
-                    if(!ExtruderManager.activeExtruderStackId && ExtruderManager.extruderCount > 0)
-                    {
-                        // disable all controls on the global tab, except categories
-                        return model.type == "category"
-                    }
-                    return provider.properties.enabled == "True"
-                }
+                enabled: provider.properties.enabled == "True"
 
                 property var definition: model
                 property var settingDefinitionsModel: definitionsModel
                 property var propertyProvider: provider
-                property var globalPropertyProvider: inheritStackProvider
 
                 //Qt5.4.2 and earlier has a bug where this causes a crash: https://bugreports.qt.io/browse/QTBUG-35989
                 //In addition, while it works for 5.5 and higher, the ordering of the actual combo box drop down changes,
@@ -234,55 +225,12 @@ Item
                     }
                 }
 
-                // Binding to ensure that the right containerstack ID is set for the provider.
-                // This ensures that if a setting has a limit_to_extruder id (for instance; Support speed points to the
-                // extruder that actually prints the support, as that is the setting we need to use to calculate the value)
-                Binding
-                {
-                    target: provider
-                    property: "containerStackId"
-                    when: model.settable_per_extruder || (inheritStackProvider.properties.limit_to_extruder != null && inheritStackProvider.properties.limit_to_extruder >= 0);
-                    value:
-                    {
-                        if(!model.settable_per_extruder || machineExtruderCount.properties.value == 1)
-                        {
-                            //Not settable per extruder or there only is global, so we must pick global.
-                            return Cura.MachineManager.activeMachineId;
-                        }
-                        if(inheritStackProvider.properties.limit_to_extruder != null && inheritStackProvider.properties.limit_to_extruder >= 0)
-                        {
-                            //We have limit_to_extruder, so pick that stack.
-                            return ExtruderManager.extruderIds[String(inheritStackProvider.properties.limit_to_extruder)];
-                        }
-                        if(ExtruderManager.activeExtruderStackId)
-                        {
-                            //We're on an extruder tab. Pick the current extruder.
-                            return ExtruderManager.activeExtruderStackId;
-                        }
-                        //No extruder tab is selected. Pick the global stack. Shouldn't happen any more since we removed the global tab.
-                        return Cura.MachineManager.activeMachineId;
-                    }
-                }
-
-                // Specialty provider that only watches global_inherits (we cant filter on what property changed we get events
-                // so we bypass that to make a dedicated provider).
-                UM.SettingPropertyProvider
-                {
-                    id: inheritStackProvider
-                    containerStackId: Cura.MachineManager.activeMachineId
-                    key: model.key
-                    watchedProperties: [ "limit_to_extruder" ]
-                }
-
-                UM.SettingPropertyProvider
+                Cura.PropertyProvider
                 {
                     id: provider
-
-                    containerStackId: Cura.MachineManager.activeMachineId
-                    key: model.key ? model.key : ""
-                    watchedProperties: [ "value", "enabled", "state", "validationState", "settable_per_extruder", "resolve" ]
+                    key: model.key
+                    watchedProperties: [ "value", "enabled", "state", "validationState", "resolve" ]
                     storeIndex: 0
-                    // Due to the way setPropertyValue works, removeUnusedValue gives the correct output in case of resolve
                     removeUnusedValue: model.resolve == undefined
                 }
 

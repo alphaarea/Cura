@@ -166,7 +166,7 @@ Item {
             {
                 id: revertButton;
 
-                visible: base.stackLevel == 0 && base.showRevertButton
+                visible: base.showRevertButton && propertyProvider.shouldShowRevert
 
                 height: parent.height;
                 width: height;
@@ -193,45 +193,7 @@ Item {
                 // - User made changes that override any loaded settings
                 // - This setting item uses inherit button at all
                 // - The type of the value of any deeper container is an "object" (eg; is a function)
-                visible:
-                {
-                    if(!base.showInheritButton)
-                    {
-                        return false;
-                    }
-
-                    if(!propertyProvider.properties.enabled)
-                    {
-                        // Note: This is not strictly necessary since a disabled setting is hidden anyway.
-                        // But this will cause the binding to be re-evaluated when the enabled property changes.
-                        return false;
-                    }
-
-                    // There are no settings with any warning.
-                    if(Cura.SettingInheritanceManager.settingsWithInheritanceWarning.length == 0)
-                    {
-                        return false;
-                    }
-
-                    // This setting has a resolve value, so an inheritance warning doesn't do anything.
-                    if(resolve != "None")
-                    {
-                        return false
-                    }
-
-                    // If the setting does not have a limit_to_extruder property (or is -1), use the active stack.
-                    if(globalPropertyProvider.properties.limit_to_extruder == null || globalPropertyProvider.properties.limit_to_extruder == -1)
-                    {
-                        return Cura.SettingInheritanceManager.settingsWithInheritanceWarning.indexOf(definition.key) >= 0;
-                    }
-
-                    // Setting does have a limit_to_extruder property, so use that one instead.
-                    if (definition.key === undefined) {
-                        // Observed when loading workspace, probably when SettingItems are removed.
-                        return false;
-                    }
-                    return Cura.SettingInheritanceManager.getOverridesForExtruder(definition.key, globalPropertyProvider.properties.limit_to_extruder).indexOf(definition.key) >= 0;
-                }
+                visible: base.showInheritButton && propertyProvider.shouldShowInherit
 
                 height: parent.height;
                 width: height;
